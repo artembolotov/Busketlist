@@ -7,34 +7,40 @@
 
 import SwiftUI
 
-struct ContentView: View {
+enum LoadingState {
+     case loading, success, failed
+}
+
+struct LoadingView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-                .onTapGesture {
-                    let message = "Test Message"
-                    let url = getDocumentsDirectory().appending(path: "message.txt")
-                    
-                    do {
-                        try message.write(to: url, atomically: true, encoding: .utf8)
-                        
-                        let input = try String(contentsOf: url)
-                        print(input)
-                    } catch {
-                        print("Error: \(error.localizedDescription)")
-                    }
-                    
-                }
-        }
-        .padding()
+        Text("Loading…")
     }
+}
+
+struct SuccessView: View {
+    var body: some View {
+        Text("Success")
+    }
+}
+
+struct FailedView: View {
+    var body: some View {
+        Text("Failed")
+    }
+}
+
+struct ContentView: View {
+    var loadingState = LoadingState.loading
     
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
+    var body: some View {
+        switch loadingState {
+        case .loading:
+            LoadingView()
+        case .success:
+            SuccessView()
+        case .failed:
+            FailedView()
+        }
     }
 }
 
