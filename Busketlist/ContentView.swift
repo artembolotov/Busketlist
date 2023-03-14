@@ -14,8 +14,27 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
             Text("Hello, world!")
+                .onTapGesture {
+                    let message = "Test Message"
+                    let url = getDocumentsDirectory().appending(path: "message.txt")
+                    
+                    do {
+                        try message.write(to: url, atomically: true, encoding: .utf8)
+                        
+                        let input = try String(contentsOf: url)
+                        print(input)
+                    } catch {
+                        print("Error: \(error.localizedDescription)")
+                    }
+                    
+                }
         }
         .padding()
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
 }
 
